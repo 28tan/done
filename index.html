@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="msapplication-tap-highlight" content="no" />
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+		<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+		
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<script type="text/javascript" src="cordova.js"></script>
+		
+		<script type="text/javascript">
+		
+			function onFSsuccess(FS){
+			   myRoot=FS.root;
+			   myRoot.getFile('sample.txt', {create: true, exclusive:false}, function(fileEntry) {setUP(fileEntry, null, true);}, onCreateErr);
+			   alert ("Success for FS"); 
+			}
+			
+			function change_page(){
+			window.location.href="to_do_list.html";}
+			
+		</script>
+		
+		<title>To-Do List</title>
+		
+	</head>
+
+	<body>
+	
+		<div class="layer1" onclick="this.style.display='none'">
+		<div class= "animate"">Davis Hanberry <br>Tanuj Ranae<br>Logan Racer<br> Prajwal
+		</div>
+		</div>
+		<div class = "container">
+		<img src="img/picture.jpg" onclick="change_page()" alt="Christmas" style="width:100%;" > 
+		<div class="top-left"> <h1>Getting Things Done </h1> </div>  
+		</div>
+	
+	</body>
+	
+<!--<div>Icons made by <a href="https://www.flaticon.com/authors/flat-icons" title="Flat Icons">Flat Icons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>-->
+<!--<w3 schools> (<12/2/2019>) <css animations> (<1.0>) [<type>]. https://www.w3schools.com/css/css3_animations.asp. -->
+</html>
+

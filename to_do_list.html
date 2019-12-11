@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="msapplication-tap-highlight" content="no" />
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+		<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+		
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		
+		<script type="text/javascript" src="cordova.js"></script>
+		<!-- <script type="text/javascript" src="js/index.js"></script> -->
+		<script type="text/javascript">
+var count=0;
+			document.addEventListener('deviceready', onDeviceReady, false);
+
+			function generateTask(){
+				dates=document.querySelector("#due").value;
+
+				cat=document.querySelector("#category").value;
+				pri= document.querySelector("#priority").value;
+
+				str="sgag";
+				
+				if(pri=="H"){
+					str="tomato";
+				}
+				else if(pri=="M"){
+					str="Yellow";
+				}
+				else {
+					str="Blue";
+				}
+
+				task_name = document.querySelector("#taskName").value;
+				resizable = document.querySelector("#resizable");
+				resizable.innerHTML = resizable.innerHTML +
+				"<div class='task'>" +	"<div class='checkBox'> <input type = 'checkbox' onclick='done(this)'> </div>"+
+				"<div class='taskName'due(x)>" + task_name + "</div>" +"<div class='taskDate'>"+ dates +" </div>"+"<div class='taskPrior' style='color:"+ str +"' onclick='changeIt(this)'>"+ pri +"</div>"
+				+"<div class='taskCategory'>"+ cat + "</div>"+
+				"<div class='taskDelete' onclick='removeTask(this)'>X</div>"+
+				"</div>";
+			}
+			
+			
+			function done(x){
+				if(x.checked== true){
+					x.outerHTML="<div class='checkBox'> <input type = 'checkbox'onclick='done(this)' checked> </div>";
+				}
+				if(x.checked== false){
+					x.outerHTML="<div class='checkBox'> <input type = 'checkbox'onclick='done(this)' > </div>";
+				}
+			}
+			
+			
+			function removeTask(x){
+				x.innerHTML="Y";
+				resizable = document.querySelector("#resizable");
+				tasks = document.querySelectorAll(".taskDelete");
+				tasksName = document.querySelectorAll(".taskName");
+				date = document.querySelectorAll(".taskDate");
+				prior = document.querySelectorAll(".taskPrior");
+				cat = document.querySelectorAll(".taskCategory");
+				che=document.querySelectorAll(".checkBox");
+				resizable.innerHTML = "";
+				
+				for(var i = 0; i < tasks.length; i++){
+					if(i==0){
+						resizable.innerHTML = resizable.innerHTML +
+						"<div class='taskHeader'>"+
+					"<div class='checkBox'><b>Done?</b> </div>"+
+					"<div class='taskName'> <b>Task</b></div>"+
+					"<div class='taskDate'> <b>Due Date</b> </div>"+
+					"<div class='taskPrior'> <b>Priority</b> </div>"+
+					"<div class='taskCategory'><b>Category</b>  </div>"+
+					"<div class = 'taskDelete'> <b>Delete</b> </div>"+
+				"</div>"
+
+					}
+					else if(tasks[i].innerHTML != "Y"){
+						resizable.innerHTML = resizable.innerHTML +
+						"<div class='task'>" +
+						che[i].outerHTML+
+						tasksName[i].outerHTML+
+						"<div class='taskDate'>"+ date[i].innerHTML +" </div>"+prior[i].outerHTML+
+						"<div class='taskCategory'>"+ cat[i].innerHTML + "</div>"+
+						"<div class='taskDelete' onclick='removeTask(this)'>X</div>" +
+						"</div>"
+					}
+				}
+			}
+
+
+			function changeIt(x)
+			{
+				if(x.innerHTML=="H"){
+					x.outerHTML="<div class='taskPrior' style='color:Yellow' onclick='changeIt(this)'>M</div>";
+				}
+				else if(x.innerHTML=="M"){
+					x.outerHTML="<div class='taskPrior' style='color:Blue' onclick='changeIt(this)'>L</div>";
+				}
+				else if(x.innerHTML=="L"){
+					x.outerHTML="<div class='taskPrior' style='color:orange' onclick='changeIt(this)'>H</div>";
+				}
+			}
+
+
+			function due(){
+				resizable = document.querySelector("#resizable");
+				date = document.querySelectorAll(".taskDate");
+				tasksName = document.querySelectorAll(".taskName");
+				var arr = new Array();
+				var today = new Date();
+				
+				for(var i = 0; i <  date.length; i++){
+					arr.push(new Date(date[i].innerHTML));
+				}
+			
+				
+				for(var i = 0; i < date.length; i++){
+					//alert(arr[i])
+					//alert(today)
+					var time = today.getTime() - arr[i].getTime();
+					var diff = time/(1000 *3600*24);
+					//alert(diff)
+
+					if(i==0){
+
+					}
+					else {
+					if( diff > 0 && diff <1 )
+					{
+						tasksName[i].outerHTML=	"<div class='taskName' style='font-weight: bold '>" + tasksName[i].innerHTML + "</div>";
+		
+	
+	             }
+					else if(diff >0){
+						tasksName[i].outerHTML=	"<div class='taskName' style='font-weight: bold; color:Red;'>" + tasksName[i].innerHTML + "</div>";
+					}
+					}
+				}
+			}
+			
+			
+			function sort(){
+				var arr = new Array();
+				var arr2 = new Array();
+				resizable = document.querySelector("#resizable");
+				tasks = document.querySelectorAll(".taskDelete");
+				tasksName = document.querySelectorAll(".taskName");
+				dated = document.querySelectorAll(".taskDate");
+				prior = document.querySelectorAll(".taskPrior");
+				cat = document.querySelectorAll(".taskCategory");
+				che=document.querySelectorAll(".checkBox");
+
+				for(var i = 0; i < tasks.length; i++){
+					arr2.push(new Date(dated[i].innerHTML));
+				}
+				
+				for(var i = 0; i <arr2.length;i++){
+					k=0;
+					date =arr2[i];
+					//alert(arr2[i]);
+					
+					for(var j = 0; j <arr2.length;j++){
+						date1=arr2[j];
+						var time = date.getTime()-date1.getTime();
+						var diff = time/(1000 *3600*24);
+						
+						if(diff <0){
+							k++;
+						}
+					}	
+					arr[k]=i;
+				}
+				resizable.innerHTML="";
+				resizable.innerHTML = resizable.innerHTML +
+						"<div class='taskHeader'>"+
+					"<div class='checkBox'><b>Done?</b> </div>"+
+					"<div class='taskName'> <b>Task</b></div>"+
+					"<div class='taskDate'> <b>Due Date</b> </div>"+
+					"<div class='taskPrior'> <b>Priority</b> </div>"+
+					"<div class='taskCategory'><b>Category</b>  </div>"+
+					"<div class = 'taskDelete'> <b>Delete</b> </div>"+
+				"</div>"
+			
+
+				
+				for(var i = 0; i < tasks.length; i++){
+					if (arr[i]==0){
+
+					}
+					else {
+					resizable.innerHTML = resizable.innerHTML +
+					"<div class='task'>" +
+					che[arr[i]].outerHTML +
+					tasksName[arr[i]].outerHTML  +
+					"<div class='taskDate'>"+ dated[arr[i]].innerHTML +" </div>"+prior[arr[i]].outerHTML+
+					"<div class='taskCategory'>"+ cat[arr[i]].innerHTML + "</div>"+
+					"<div class='taskDelete' onclick='removeTask(this)'>X</div>" +
+					"</div>"
+					}
+				}
+				
+	
+			}
+
+			function sort2(){
+				var arr = new Array();
+				var arr2 = new Array();
+				resizable = document.querySelector("#resizable");
+				tasks = document.querySelectorAll(".taskDelete");
+				tasksName = document.querySelectorAll(".taskName");
+				dated = document.querySelectorAll(".taskDate");
+				prior = document.querySelectorAll(".taskPrior");
+				cat = document.querySelectorAll(".taskCategory");
+				che=document.querySelectorAll(".checkBox");
+
+				for(var i = 0; i < tasks.length; i++){
+					arr2.push(new Date(dated[i].innerHTML));
+				}
+				
+				for(var i = 0; i <arr2.length;i++){
+					k=0;
+					date =arr2[i];
+					//alert(arr2[i]);
+					
+					for(var j = 0; j <arr2.length;j++){
+						date1=arr2[j];
+						var time = date.getTime()-date1.getTime();
+						var diff = time/(1000 *3600*24);
+						
+						if(diff >0){
+							k++;
+						}
+					}	
+					arr[k]=i;
+				}
+				resizable.innerHTML="";
+				resizable.innerHTML = resizable.innerHTML +
+						"<div class='taskHeader'>"+
+					"<div class='checkBox'><b>Done?</b> </div>"+
+					"<div class='taskName'> <b>Task</b></div>"+
+					"<div class='taskDate'> <b>Due Date</b> </div>"+
+					"<div class='taskPrior'> <b>Priority</b> </div>"+
+					"<div class='taskCategory'><b>Category</b>  </div>"+
+					"<div class = 'taskDelete'> <b>Delete</b> </div>"+
+				"</div>"
+			
+
+				
+				for(var i = 0; i < tasks.length; i++){
+					if (arr[i]==0){
+
+					}
+					else {
+					resizable.innerHTML = resizable.innerHTML +
+					"<div class='task'>" +
+					che[arr[i]].outerHTML +
+					tasksName[arr[i]].outerHTML  +
+					"<div class='taskDate'>"+ dated[arr[i]].innerHTML +" </div>"+prior[arr[i]].outerHTML+
+					"<div class='taskCategory'>"+ cat[arr[i]].innerHTML + "</div>"+
+					"<div class='taskDelete' onclick='removeTask(this)'>X</div>" +
+					"</div>"
+					}
+				}
+				
+	
+			}
+			function myFunction() {
+  var x = document.getElementById("so").value;
+if(x==1){
+	sort()
+
+}
+else{
+	sort2()
+
+}
+}
+setInterval(function(){ due(); }, 3000);
+
+			function onDeviceReady(){
+				var size =0;
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, size, onFSsuccess, onFSerror);
+			}
+			
+			
+			function onFSsuccess(FS){
+				myRoot=FS.root;
+				myRoot.getFile('sample.txt', {create: true, exclusive:false}, function(fileEntry) {setUP(fileEntry, null, true);}, onCreateErr);
+				//alert ("Success for FS"); 
+			}
+			
+			//function getItReady(file)
+			//{
+			// writeFile(file, null);
+			//}
+			
+			
+			function readIT() {
+				//notice the ugly code for the file method. It can be beautified
+				myFile.file(function (file) {
+					var reader = new FileReader();
+					reader.onloadend = function() {
+						document.getElementById("resizable").innerHTML = this.result;
+					};
+					reader.readAsText(file);
+				}, onReadErr);
+			}
+			
+			
+			function setUP(fileEntry, x, isAppend){
+				//setUP the file pointer for later use
+				myFile=fileEntry;
+			}
+			
+			
+			function onFSerror(err){
+				//alert ("FS Error " + err);
+			}
+			
+			
+			function onReadErr (err){
+				//alert ("Read Error " + err);
+			}
+			
+			
+			function onWriteErr (err){
+				//alert ("Write Error " + err);
+			}
+			
+			
+			function onCreateErr (err){
+				//alert ("Create Error " + err);
+			}
+			
+			
+			function writeIT() {
+				myFile.createWriter(onGetWriter, onWriteErr);
+				due();
+			}
+			
+			
+			function appendIT() {
+				myFile.createWriter(onGetAppend, onWriteErr);
+			}
+			
+			
+			function onGetWriter(myWriter) {
+				str = document.getElementById("resizable").innerHTML;
+				myWriter.write(str);
+			}
+			
+			
+			function onGetAppend(myWriter) {
+				str = document.getElementById("resizable").innerHTML;
+				myWriter.seek(myWriter.length);
+				myWriter.write(str);
+			}
+
+
+			function addOptPriority()
+			{
+				var option=document.getElementById("priority").selectedIndex;
+				//alert ("option is: "+ option);
+			}
+
+
+			function addOptCategory()
+			{
+				var option=document.getElementById("category").selectedIndex;
+				//alert ("option is: "+ option);
+			}
+
+
+			function addDate()
+			{
+				var Due=document.getElementById("dueDate").value;
+				//alert ("option is: "+ Due);
+			}
+			
+		</script>
+		
+		<title>To-Do List</title>
+		
+	</head>
+
+	<body>
+	
+		<div id="parentWrapper">
+			<div class = 'title'>
+				<h1> To Do List </h1>
+			</div>
+			<div id="resizable">
+				<div class='taskHeader'>
+					<div class='checkBox'><b>Done?</b> </div>
+					<div class='taskName'> <b>Task</b></div>
+					<div class='taskDate'> <b>Due Date</b> </div>
+					<div class='taskPrior'> <b>Priority</b> </div>
+					<div class='taskCategory'><b>Category</b>  </div>
+					<div class = 'taskDelete'> <b>Delete</b> </div>
+				</div>
+				
+				<!-- TASKS GENERATED HERE -->
+				
+			</div>
+		</div>
+
+		<br>
+
+		<div class="addTask">
+			<div class = 'addTaskHeader'>
+				<div class='addTaskName'><b>Task Name</b> </div>
+				<div class='addTaskPrior'> <b>Priority</b></div>
+				<div class='addTaskCat'> <b>Category</b> </div>
+				<div class='addTaskDate'> <b>Due Date</b> </div>
+			</div>
+
+			<div class = 'addTaskBar'>
+				<div class = 'addTaskName'>
+					<input id="taskName" type="text" placeholder="Task name" class = "taskNameTBox">
+				</div>
+
+				<div class = 'addTaskPrior'>
+					<select id='priority' class = "priorDropdown">
+						<option value='H' selected>High</option>
+						<option value='M'>Medium</option> 
+						<option value='L'>Low </option>
+					</select>
+				</div>
+
+				<div class = 'addTaskCat'>
+					<select id='category' class = "catDropdown">
+						<option value='Personal' selected>Personal</option>
+						<option value='Work'>Work</option>
+					</select>
+				</div>
+
+				<div class = 'addTaskDate'>
+					<input type='date' id='due' min="2019-10-01" max="2020-12-31" class = "date">
+				</div>
+
+				<div class = 'addTaskDateImg'>
+					<img src="img/calendar-black.png">
+				</div>
+			</div>
+		</div>
+
+		<br>
+
+		<input type="button" value="Generate Task" onclick="generateTask()">
+
+		<br>
+
+		<div id = "filedata"></div>
+
+		<br>
+
+		<button type="button" onclick="readIT()">Load Tasks</button>
+		<button type="button" onclick="writeIT()">Save Tasks</button>
+		<button type="button" onclick="due()">Show Past Due</button>
+		<select id='so'  onchange="myFunction()">
+			<option value='1' selected>sort1</option>
+			<option value='2'>sort2</option> 
+		</select>
+
+	</body>
+
+</html>
